@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">文章详情 | Fred Fu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* ── Always show scrollbar to prevent nav jumping ── */
+        html { overflow-y: scroll; }
+
+        :root {
+            --bg: #f9f9f9;
+            --bg-card: #ffffff;
+            --bg-nav: rgba(255,255,255,0.8);
+            --border: #e5e7eb;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --text-nav: #666;
+            --text-nav-hover: #1a1a1a;
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.06);
+        }
+        .dark {
+            --bg: #0f0f13;
+            --bg-card: #1a1a22;
+            --bg-nav: rgba(15,15,19,0.85);
+            --border: #2a2a35;
+            --text-primary: #e8e8ed;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --text-nav: #888;
+            --text-nav-hover: #e8e8ed;
+            --accent: #60a5fa;
+            --accent-soft: rgba(96, 165, 250, 0.08);
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        #bg-grid {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px; opacity: 0.35; transition: opacity 0.4s ease;
+        }
+        .dark #bg-grid { opacity: 0.18; }
+        #particles-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+        section, footer, nav { position: relative; z-index: 2; }
+        nav { background-color: var(--bg-nav) !important; border-color: var(--border) !important; backdrop-filter: blur(12px); transition: background-color 0.4s ease, border-color 0.4s ease; }
+        .nav-link { position: relative; color: var(--text-nav); transition: color 0.2s ease; }
+        .nav-link:hover { color: var(--text-nav-hover); }
+        #theme-toggle, #theme-toggle-mobile {
+            background: none; border: none; cursor: pointer; padding: 6px; border-radius: 999px;
+            color: var(--text-nav); transition: color 0.2s ease, background 0.2s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #theme-toggle:hover, #theme-toggle-mobile:hover { color: var(--text-nav-hover); background: rgba(128,128,128,0.1); }
+        #theme-toggle .sun-icon, #theme-toggle-mobile .sun-icon { display: block; }
+        #theme-toggle .moon-icon, #theme-toggle-mobile .moon-icon { display: none; }
+        .dark #theme-toggle .sun-icon, .dark #theme-toggle-mobile .sun-icon { display: none; }
+        .dark #theme-toggle .moon-icon, .dark #theme-toggle-mobile .moon-icon { display: block; }
+        footer { background-color: var(--bg-card) !important; border-color: var(--border) !important; }
+        .text-gray-400 { color: var(--text-muted) !important; }
+        .text-gray-500 { color: var(--text-secondary) !important; }
+        .text-gray-600 { color: var(--text-secondary) !important; }
+        .text-gray-900 { color: var(--text-primary) !important; }
+        .border-gray-100 { border-color: var(--border) !important; }
+        .border-gray-200 { border-color: var(--border) !important; }
+
+        /* ── Article Typography (文人阅读体验) ── */
+        .article-container {
+            max-width: 42rem; /* ~672px — 舒适阅读宽度 */
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .article-title {
+            font-size: 1.75rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            margin-bottom: 0.5rem;
+        }
+        .article-meta {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* ── Prose — 宽松排版 ── */
+        .prose {
+            font-size: 1rem;
+            line-height: 1.9;         /* leading-relaxed */
+            color: var(--text-secondary);
+        }
+        .prose p { margin-bottom: 1.5em; }
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-top: 2.5em;
+            margin-bottom: 0.75em;
+            line-height: 1.3;
+        }
+        .prose h1 { font-size: 1.75rem; margin-top: 0; }
+        .prose h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+        .prose h3 { font-size: 1.3rem; }
+        .prose ul, .prose ol { margin-bottom: 1.5em; padding-left: 1.5em; }
+        .prose ul { list-style-type: disc; }
+        .prose ol { list-style-type: decimal; }
+        .prose li { margin-bottom: 0.4em; }
+        .prose blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 1.25em;
+            margin: 1.8em 0;
+            color: var(--text-secondary);
+            font-style: italic;
+            background: var(--accent-soft);
+            padding: 1em 1.5em;
+            border-radius: 0 8px 8px 0;
+        }
+        .prose code {
+            background: var(--accent-soft);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.875em;
+            color: var(--accent);
+        }
+        .prose pre {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.25em;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1.8em;
+        }
+        .prose pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 0.9em;
+        }
+        .prose a {
+            color: var(--accent);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            text-decoration-thickness: 1px;
+        }
+        .prose a:hover { opacity: 0.8; }
+        .prose img {
+            border-radius: 8px;
+            margin: 2em 0;
+        }
+        .prose hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2.5em 0;
+        }
+
+        /* ── Tags ── */
+        .post-tag {
+            display: inline-block; padding: 1px 10px; border-radius: 999px;
+            font-size: 0.7rem; font-weight: 400;
+            background: var(--accent-soft); color: var(--accent);
+        }
+
+        /* ── Back link ── */
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            font-size: 0.8125rem; color: var(--text-muted);
+            transition: color 0.2s ease;
+        }
+        .back-link:hover { color: var(--accent); }
+    </style>
+</head>
+<body class="antialiased">
+    <div id="bg-grid"></div>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="index.html" class="text-lg font-semibold tracking-tight text-gray-900">Fred Fu</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html#about" class="nav-link text-sm font-medium">About</a>
+                <a href="projects.html" class="nav-link text-sm font-medium">Projects</a>
+                <a href="blog.html" class="nav-link text-sm font-medium">Blog</a>
+                <a href="contact.html" class="nav-link text-sm font-medium">Contact</a>
+                <button id="theme-toggle" aria-label="Toggle dark mode">
+                    <svg class="sun-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <svg class="moon-icon w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="md:hidden flex items-center space-x-3">
+                <button id="theme-toggle-mobile" aria-label="Toggle dark mode" class="text-gray-500">
+                    <svg class="sun-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <svg class="moon-icon w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+                    </svg>
+                </button>
+                <button class="text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article (文人详情页：宽阔留白) -->
+    <article class="pt-24 pb-24">
+        <div class="article-container">
+            <!-- Back link -->
+            <a href="blog.html" class="back-link mb-10 inline-block">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                返回随笔
+            </a>
+
+            <!-- Post Header -->
+            <header class="mb-10">
+                <div class="article-meta" id="post-meta">
+                    <!-- Date and Read Time -->
+                </div>
+                <h1 class="article-title" id="post-title">
+                    <!-- Title -->
+                </h1>
+                <div class="flex flex-wrap gap-2 mt-4" id="post-tags">
+                    <!-- Tags -->
+                </div>
+            </header>
+
+            <!-- Markdown Content -->
+            <div class="prose" id="markdown-content">
+                <!-- Markdown rendered here -->
+            </div>
+
+            <!-- Footer nav -->
+            <div class="mt-16 pt-8 border-t border-gray-100 flex justify-between">
+                <a href="#" id="prev-post-link" class="back-link hidden">&larr; 上一篇</a>
+                <a href="blog.html" id="back-to-blog" class="back-link">返回随笔 &rarr;</a>
+                <a href="#" id="next-post-link" class="back-link hidden">下一篇 &rarr;</a>
+            </div>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer class="py-10 border-t border-gray-100 w-full">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2026 Fred Fu. Built with Passion.</p>
+            <div class="flex space-x-6">
+                <a href="https://github.com/Fuyh314" target="_blank" class="text-gray-400 hover:text-gray-600 transition-colors text-sm">GitHub</a>
+                <a href="https://x.com/Fredtelcom" target="_blank" class="text-gray-400 hover:text-gray-600 transition-colors text-sm">X</a>
+                <span class="text-gray-400 text-sm">fuyh07777777@163.com</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ── Dark Mode Toggle ──
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+        document.getElementById('theme-toggle').addEventListener('click', toggleDarkMode);
+        document.getElementById('theme-toggle-mobile').addEventListener('click', toggleDarkMode);
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // ── Floating Particles ──
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: -1000, y: -1000 };
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 1; this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3; this.opacity = Math.random() * 0.4 + 0.1;
+                this.pulse = Math.random() * Math.PI * 2; this.pulseSpeed = Math.random() * 0.02 + 0.005;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY; this.pulse += this.pulseSpeed;
+                const dx = mouse.x - this.x; const dy = mouse.y - this.y; const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 200) { const force = (200 - dist) / 200 * 0.02; this.x += dx * force; this.y += dy * force; }
+                if (this.x < -20 || this.x > canvas.width + 20 || this.y < -20 || this.y > canvas.height + 20) this.reset();
+            }
+            draw() {
+                const currentOpacity = this.opacity * (0.6 + 0.4 * Math.sin(this.pulse));
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                const isDark = document.documentElement.classList.contains('dark');
+                ctx.fillStyle = isDark ? `rgba(147, 197, 253, ${currentOpacity * 0.6})` : `rgba(59, 130, 246, ${currentOpacity * 0.5})`;
+                ctx.fill();
+            }
+        }
+        const particleCount = Math.min(60, Math.floor(window.innerWidth * window.innerHeight / 15000));
+        for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x; const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        const opacity = (1 - dist / 120) * 0.15;
+                        const isDark = document.documentElement.classList.contains('dark');
+                        ctx.strokeStyle = isDark ? `rgba(147, 197, 253, ${opacity * 0.5})` : `rgba(59, 130, 246, ${opacity * 0.4})`;
+                        ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+        document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        document.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+
+        // ── Post Loading Logic ──
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+            if (!postId) {
+                document.getElementById('markdown-content').innerHTML = '<p>文章未找到。</p>';
+                document.getElementById('page-title').textContent = '文章未找到 | Fred Fu';
+                return;
+            }
+            try {
+                const response = await fetch('./posts.json');
+                const posts = await response.json();
+                const post = posts.find(p => p.id === postId);
+                if (!post) {
+                    document.getElementById('markdown-content').innerHTML = '<p>文章未找到。</p>';
+                    document.getElementById('page-title').textContent = '文章未找到 | Fred Fu';
+                    return;
+                }
+                document.getElementById('page-title').textContent = `${post.title} | Fred Fu`;
+                document.getElementById('post-title').textContent = post.title;
+                document.getElementById('post-meta').innerHTML = `
+                    <span>${post.date}</span>
+                    <span class="mx-2">·</span>
+                    <span>${post.read_time}</span>
+                `;
+                const postTags = document.getElementById('post-tags');
+                postTags.innerHTML = post.tags.map(tag => `<span class="post-tag">${tag}</span>`).join('');
+
+                if (!post.markdown_file) {
+                    document.getElementById('markdown-content').innerHTML = '<p class="text-gray-500">本文正在撰写中，暂无内容。敬请期待！</p>';
+                } else {
+                    try {
+                        const markdownResponse = await fetch(`./posts/${post.markdown_file}`);
+                        if (!markdownResponse.ok) throw new Error('Not found');
+                        const markdownText = await markdownResponse.text();
+                        document.getElementById('markdown-content').innerHTML = marked.parse(markdownText);
+                    } catch (mdError) {
+                        console.error('Error loading markdown:', mdError);
+                        document.getElementById('markdown-content').innerHTML = '<p class="text-gray-500">文章内容加载失败，请稍后再试。</p>';
+                    }
+                }
+
+                const currentIndex = posts.findIndex(p => p.id === postId);
+                const prevPost = posts[currentIndex - 1];
+                const nextPost = posts[currentIndex + 1];
+                const prevPostLink = document.getElementById('prev-post-link');
+                const nextPostLink = document.getElementById('next-post-link');
+                if (prevPost) { prevPostLink.classList.remove('hidden'); prevPostLink.href = `post.html?id=${prevPost.id}`; }
+                else { prevPostLink.classList.add('hidden'); }
+                if (nextPost) { nextPostLink.classList.remove('hidden'); nextPostLink.href = `post.html?id=${nextPost.id}`; }
+                else { nextPostLink.classList.add('hidden'); }
+            } catch (error) {
+                console.error('Error loading post:', error);
+                document.getElementById('markdown-content').innerHTML = '<p>加载文章失败。</p>';
+                document.getElementById('page-title').textContent = '加载失败 | Fred Fu';
+            }
+        });
+    </script>
+</body>
+</html>

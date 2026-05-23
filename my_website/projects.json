@@ -1,0 +1,116 @@
+[
+  {
+    "id": "taskflow-ai",
+    "title": "TaskFlow AI",
+    "subtitle": "智能任务调度系统",
+    "description": "基于 React + LLM 的自动化任务调度工具。支持自然语言解析、智能优先级排序、甘特图可视化。",
+    "category": "web-app",
+    "tags": ["#React", "#TypeScript", "#LLM", "#TailwindCSS"],
+    "year": "2026",
+    "role": "全栈开发者",
+    "tech_stack": ["React", "TypeScript", "Node.js", "OpenAI API", "PostgreSQL", "Tailwind CSS"],
+    "links": {
+      "github": "https://github.com/Fuyh314/taskflow-ai",
+      "live": "https://taskflow-ai.vercel.app"
+    },
+    "content_file": "projects/taskflow-ai.md",
+    "hero_color": "from-gray-50 to-gray-200",
+    "hero_label": "Task Management System",
+    "hero_label_color": "text-gray-400"
+  },
+  {
+    "id": "minimalist-blog",
+    "title": "Minimalist Blog",
+    "subtitle": "极简博客主题",
+    "description": "基于 Astro 框架构建的极致阅读体验博客主题。聚焦内容排版、暗色模式、零JS开销。",
+    "category": "web-app",
+    "tags": ["#Astro", "#TailwindCSS", "#Markdown"],
+    "year": "2025",
+    "role": "前端开发者",
+    "tech_stack": ["Astro", "Tailwind CSS", "Markdown", "Vercel"],
+    "links": {
+      "github": "https://github.com/Fuyh314/minimalist-blog",
+      "live": "https://minimalist-blog.vercel.app"
+    },
+    "content_file": "projects/minimalist-blog.md",
+    "hero_color": "from-indigo-50 to-blue-50",
+    "hero_label": "Minimal Blog Theme",
+    "hero_label_color": "text-indigo-200"
+  },
+  {
+    "id": "datalens",
+    "title": "DataLens",
+    "subtitle": "实时数据可视化仪表盘",
+    "description": "交互式实时监控仪表盘。支持多数据源接入、自定义图表、告警规则引擎。",
+    "category": "data-viz",
+    "tags": ["#D3.js", "#WebSocket", "#Node.js"],
+    "year": "2026",
+    "role": "全栈开发者",
+    "tech_stack": ["D3.js", "WebSocket", "Node.js", "Redis", "Docker"],
+    "links": {
+      "github": "https://github.com/Fuyh314/datalens",
+      "live": null
+    },
+    "content_file": "projects/datalens.md",
+    "hero_color": "from-emerald-50 to-teal-50",
+    "hero_label": "Data Visualization",
+    "hero_label_color": "text-emerald-200"
+  },
+  {
+    "id": "light-shadow",
+    "title": "Light & Shadow",
+    "subtitle": "摄影作品集网站",
+    "description": "响应式摄影作品展示平台。具备瀑布流布局、图片懒加载、全屏画廊浏览功能。",
+    "category": "design",
+    "tags": ["#Responsive", "#Masonry", "#Gallery"],
+    "year": "2025",
+    "role": "前端开发者",
+    "tech_stack": ["HTML", "CSS", "JavaScript", "Vite"],
+    "links": {
+      "github": "https://github.com/Fuyh314/light-shadow",
+      "live": "https://light-shadow.vercel.app"
+    },
+    "content_file": "projects/light-shadow.md",
+    "hero_color": "from-orange-50 to-red-50",
+    "hero_label": "Photography Portfolio",
+    "hero_label_color": "text-orange-200"
+  },
+  {
+    "id": "quant-models",
+    "title": "Quant Models Lab",
+    "subtitle": "量化策略模型实验室",
+    "description": "股票量化交易策略回测框架。包含因子分析、风险平价、蒙特卡洛模拟等核心模块。",
+    "category": "data-viz",
+    "tags": ["#Python", "#Pandas", "#量化"],
+    "year": "2026",
+    "role": "算法工程师",
+    "tech_stack": ["Python", "Pandas", "NumPy", "Matplotlib", "Jupyter"],
+    "links": {
+      "github": "https://github.com/Fuyh314/quant-models",
+      "live": null
+    },
+    "content_file": "projects/quant-models.md",
+    "hero_color": "from-sky-50 to-cyan-50",
+    "hero_label": "Quantitative Finance",
+    "hero_label_color": "text-sky-200"
+  },
+  {
+    "id": "c-practise",
+    "title": "C Code Workshop",
+    "subtitle": "C语言编程练习合集",
+    "description": "日常C语言编程练习仓库。包含算法实现、数据结构、系统编程等各类练习代码。",
+    "category": "experiment",
+    "tags": ["#C", "#算法", "#数据结构"],
+    "year": "2025",
+    "role": "个人练习",
+    "tech_stack": ["C", "GCC", "Makefile"],
+    "links": {
+      "github": "https://github.com/Fuyh314/c-practise",
+      "live": null
+    },
+    "content_file": "projects/c-practise.md",
+    "hero_color": "from-amber-50 to-yellow-50",
+    "hero_label": "C Language Practice",
+    "hero_label_color": "text-amber-200"
+  }
+]

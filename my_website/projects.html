@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工坊 | Fred Fu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ── Always show scrollbar to prevent nav jumping ── */
+        html { overflow-y: scroll; }
+
+        :root {
+            --bg: #f9f9f9;
+            --bg-card: #ffffff;
+            --bg-nav: rgba(255,255,255,0.8);
+            --border: #e5e7eb;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --text-nav: #666;
+            --text-nav-hover: #1a1a1a;
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.06);
+        }
+        .dark {
+            --bg: #0f0f13;
+            --bg-card: #1a1a22;
+            --bg-nav: rgba(15,15,19,0.85);
+            --border: #2a2a35;
+            --text-primary: #e8e8ed;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --text-nav: #888;
+            --text-nav-hover: #e8e8ed;
+            --accent: #60a5fa;
+            --accent-soft: rgba(96, 165, 250, 0.08);
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        #bg-grid {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px; opacity: 0.35; transition: opacity 0.4s ease;
+        }
+        .dark #bg-grid { opacity: 0.18; }
+        #particles-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+        section, footer, nav { position: relative; z-index: 2; }
+
+        nav { background-color: var(--bg-nav) !important; border-color: var(--border) !important; backdrop-filter: blur(12px); transition: background-color 0.4s ease, border-color 0.4s ease; }
+        .nav-link { position: relative; color: var(--text-nav); transition: color 0.2s ease; }
+        .nav-link:hover { color: var(--text-nav-hover); }
+
+        #theme-toggle, #theme-toggle-mobile {
+            background: none; border: none; cursor: pointer; padding: 6px; border-radius: 999px;
+            color: var(--text-nav); transition: color 0.2s ease, background 0.2s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #theme-toggle:hover, #theme-toggle-mobile:hover { color: var(--text-nav-hover); background: rgba(128,128,128,0.1); }
+        #theme-toggle .sun-icon, #theme-toggle-mobile .sun-icon { display: block; }
+        #theme-toggle .moon-icon, #theme-toggle-mobile .moon-icon { display: none; }
+        .dark #theme-toggle .sun-icon, .dark #theme-toggle-mobile .sun-icon { display: none; }
+        .dark #theme-toggle .moon-icon, .dark #theme-toggle-mobile .moon-icon { display: block; }
+
+        footer { background-color: var(--bg-card) !important; border-color: var(--border) !important; }
+        .text-gray-400 { color: var(--text-muted) !important; }
+        .text-gray-500 { color: var(--text-secondary) !important; }
+        .text-gray-600 { color: var(--text-secondary) !important; }
+        .text-gray-900 { color: var(--text-primary) !important; }
+        .border-gray-100 { border-color: var(--border) !important; }
+        .border-gray-200 { border-color: var(--border) !important; }
+
+        /* ── Workshop Grid ── */
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0,0,0,0.12);
+            border-color: var(--accent);
+        }
+        .project-card .hero-area {
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .project-card .card-body {
+            padding: 1.25rem 1.5rem 1.5rem;
+        }
+        .project-card .project-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+        .project-card .project-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.6rem;
+        }
+        .project-card .project-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            overflow: hidden;
+        }
+        .project-card .project-tags {
+            margin-top: 0.75rem;
+            display: flex; flex-wrap: wrap; gap: 0.35rem;
+        }
+        .project-card .project-tag {
+            display: inline-block; padding: 2px 10px; border-radius: 999px;
+            font-size: 0.7rem; font-weight: 400;
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+        .dark .project-card .hero-area {
+            opacity: 0.85;
+        }
+
+        /* ── Filter Bar ── */
+        .filter-btn {
+            display: inline-block; padding: 4px 16px; border-radius: 999px;
+            font-size: 0.8125rem; font-weight: 500; cursor: pointer;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            background: transparent;
+            user-select: none;
+        }
+        .filter-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .filter-btn.active {
+            color: var(--accent);
+            background: var(--accent-soft);
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div id="bg-grid"></div>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="index.html" class="text-lg font-semibold tracking-tight text-gray-900">Fred Fu</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html#about" class="nav-link text-sm font-medium">About</a>
+                <a href="projects.html" class="nav-link text-sm font-medium">Projects</a>
+                <a href="blog.html" class="nav-link text-sm font-medium">Blog</a>
+                <a href="contact.html" class="nav-link text-sm font-medium">Contact</a>
+                <button id="theme-toggle" aria-label="Toggle dark mode">
+                    <svg class="sun-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <svg class="moon-icon w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="md:hidden flex items-center space-x-3">
+                <button id="theme-toggle-mobile" aria-label="Toggle dark mode" class="text-gray-500">
+                    <svg class="sun-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <svg class="moon-icon w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+                    </svg>
+                </button>
+                <button class="text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="max-w-5xl mx-auto px-6 pt-20 pb-8">
+        <h1 class="text-2xl md:text-3xl font-medium text-gray-900 leading-snug mb-2">
+            🔧 工坊
+        </h1>
+        <p class="text-sm text-gray-500 leading-relaxed">
+            Projects, experiments, and things I've built.
+        </p>
+    </section>
+
+    <!-- Category Filter -->
+    <section class="max-w-5xl mx-auto px-6 pb-6">
+        <div class="flex flex-wrap gap-2" id="category-filter-bar">
+            <button class="filter-btn active" data-filter="all">全部</button>
+            <button class="filter-btn" data-filter="web-app">Web App</button>
+            <button class="filter-btn" data-filter="data-viz">数据可视化</button>
+            <button class="filter-btn" data-filter="design">设计</button>
+            <button class="filter-btn" data-filter="experiment">实验</button>
+        </div>
+    </section>
+
+    <!-- Project Grid -->
+    <section class="pb-24">
+        <div class="max-w-5xl mx-auto px-6">
+            <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Projects loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 border-t border-gray-100 w-full">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2026 Fred Fu. Built with Passion.</p>
+            <div class="flex space-x-6">
+                <a href="https://github.com/Fuyh314" target="_blank" class="text-gray-400 hover:text-gray-600 transition-colors text-sm">GitHub</a>
+                <a href="https://x.com/Fredtelcom" target="_blank" class="text-gray-400 hover:text-gray-600 transition-colors text-sm">X</a>
+                <span class="text-gray-400 text-sm">fuyh07777777@163.com</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ── Dark Mode Toggle ──
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle("dark");
+            localStorage.setItem("theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
+        }
+        document.getElementById("theme-toggle").addEventListener("click", toggleDarkMode);
+        document.getElementById("theme-toggle-mobile").addEventListener("click", toggleDarkMode);
+        if (localStorage.getItem("theme") === "dark" ||
+            (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+            document.documentElement.classList.add("dark");
+        }
+
+        // ── Floating Particles ──
+        const canvas = document.getElementById("particles-canvas");
+        const ctx = canvas.getContext("2d");
+        let particles = [];
+        let mouse = { x: -1000, y: -1000 };
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas(); window.addEventListener("resize", resizeCanvas);
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 1; this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3; this.opacity = Math.random() * 0.4 + 0.1;
+                this.pulse = Math.random() * Math.PI * 2; this.pulseSpeed = Math.random() * 0.02 + 0.005;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY; this.pulse += this.pulseSpeed;
+                const dx = mouse.x - this.x; const dy = mouse.y - this.y; const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 200) { const force = (200 - dist) / 200 * 0.02; this.x += dx * force; this.y += dy * force; }
+                if (this.x < -20 || this.x > canvas.width + 20 || this.y < -20 || this.y > canvas.height + 20) this.reset();
+            }
+            draw() {
+                const currentOpacity = this.opacity * (0.6 + 0.4 * Math.sin(this.pulse));
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                const isDark = document.documentElement.classList.contains("dark");
+                ctx.fillStyle = isDark ? `rgba(147, 197, 253, ${currentOpacity * 0.6})` : `rgba(59, 130, 246, ${currentOpacity * 0.5})`;
+                ctx.fill();
+            }
+        }
+        const particleCount = Math.min(60, Math.floor(window.innerWidth * window.innerHeight / 15000));
+        for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x; const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        const opacity = (1 - dist / 120) * 0.15;
+                        const isDark = document.documentElement.classList.contains("dark");
+                        ctx.strokeStyle = isDark ? `rgba(147, 197, 253, ${opacity * 0.5})` : `rgba(59, 130, 246, ${opacity * 0.4})`;
+                        ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+        document.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        document.addEventListener("mouseleave", () => { mouse.x = -1000; mouse.y = -1000; });
+
+        // ── Project Loading & Filtering ──
+        document.addEventListener("DOMContentLoaded", async () => {
+            const grid = document.getElementById("project-grid");
+            const filterBar = document.getElementById("category-filter-bar");
+            let projectsData = [];
+
+            try {
+                const response = await fetch("./projects.json");
+                projectsData = await response.json();
+                renderProjects(projectsData);
+            } catch (error) {
+                console.error("Error fetching projects.json:", error);
+                grid.innerHTML = '<p class="text-gray-500 text-sm col-span-full">未能加载项目数据。</p>';
+            }
+
+            function renderProjects(projectsToRender) {
+                grid.innerHTML = "";
+                if (projectsToRender.length === 0) {
+                    grid.innerHTML = '<p class="text-gray-500 text-sm col-span-full">没有找到匹配的项目。</p>';
+                    return;
+                }
+                projectsToRender.forEach(project => {
+                    const card = document.createElement("a");
+                    card.href = `project-detail.html?id=${project.id}`;
+                    card.className = "project-card block";
+                    // Truncate description to 100 characters
+                    const desc = project.description.length > 100
+                        ? project.description.slice(0, 100) + "…"
+                        : project.description;
+                    card.innerHTML = `
+                        <div class="hero-area bg-gradient-to-br ${project.hero_color}">
+                            <span class="${project.hero_label_color}">${project.hero_label}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="project-title">${project.title}</div>
+                            <div class="project-subtitle">${project.subtitle}</div>
+                            <div class="project-desc">${desc}</div>
+                            <div class="project-tags">
+                                ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join("")}
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            function filterProjects(category) {
+                const filtered = category === "all" ? projectsData : projectsData.filter(p => p.category === category);
+                renderProjects(filtered);
+            }
+
+            filterBar.addEventListener("click", (e) => {
+                const target = e.target;
+                if (target.classList.contains("filter-btn")) {
+                    filterBar.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+                    target.classList.add("active");
+                    filterProjects(target.dataset.filter);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

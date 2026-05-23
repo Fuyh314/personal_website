@@ -1,0 +1,52 @@
+[
+  {
+    "id": "my-first-vibe",
+    "title": "我的第一篇 Vibecoding 网页开发记录",
+    "date": "May 15, 2026",
+    "read_time": "4 min read",
+    "category": "技术",
+    "tags": ["#前端", "#Vibecoding", "#TailwindCSS", "#AI编程"],
+    "markdown_file": "my-first-vibe.md",
+    "description": "这是我第一次尝试用 Vibecoding 的方式搭建个人网站——从零开始，借助 AI 辅助完成了一个完整的响应式页面。整个过程像是一场有趣的对话：我描述想法，AI 生成代码，我再调整细节。这篇文章记录了这次奇妙的开发体验，以及我对\"人机协作编程\"的一些思考。"
+  },
+  {
+    "id": "blog-mcm",
+    "title": "关于美赛数学建模的入门复盘",
+    "date": "May 20, 2026",
+    "read_time": "6 min read",
+    "category": "技术",
+    "tags": ["#数学建模", "#LaTeX", "#数据分析", "#Python"],
+    "markdown_file": "blog-mcm.md",
+    "description": "从选题到建模再到论文撰写，美赛（MCM/ICM）是一场对综合能力的极限考验。这篇文章记录了我从零开始准备美赛的全过程——如何组队、如何选题、如何快速上手 LaTeX 排版，以及那些踩过的坑和收获的经验。如果你也在准备数学建模竞赛，希望这篇复盘能给你一些启发。"
+  },
+  {
+    "id": "quant-trading-101",
+    "title": "量化交易入门：从策略回测到实盘",
+    "date": "May 22, 2026",
+    "read_time": "5 min read",
+    "category": "量化与投资",
+    "tags": ["#量化交易", "#回测", "#Python", "#金融工程"],
+    "markdown_file": "",
+    "description": "量化交易入门笔记，从策略思路、回测框架搭建到实盘部署的完整流程梳理。本文记录了我在构建第一个简单均线策略时所学到的核心概念和常见陷阱。"
+  },
+  {
+    "id": "football-tactics",
+    "title": "足球战术笔记：从高位逼抢到防守反击",
+    "date": "May 18, 2026",
+    "read_time": "7 min read",
+    "category": "体育",
+    "tags": ["#足球", "#战术分析", "#欧冠", "#英超"],
+    "markdown_file": "",
+    "description": "作为一名足球迷，我一直在研究现代足球的战术演变。从克洛普的高位逼抢到穆里尼奥的防守反击，这篇文章梳理了几种主流战术体系的核心思路与代表案例。"
+  },
+  {
+    "id": "random-thoughts-may",
+    "title": "五月杂记：关于节奏、专注与松弛感",
+    "date": "May 25, 2026",
+    "read_time": "3 min read",
+    "category": "余白",
+    "tags": ["#随笔", "#生活感悟", "#节奏"],
+    "markdown_file": "",
+    "description": "在忙碌的学期中间，偶尔停下来想想'为什么要做这些事'也是一种必要。这篇随笔记录了我对生活节奏、专注状态和松弛感的一些零碎思考。"
+  }
+]
