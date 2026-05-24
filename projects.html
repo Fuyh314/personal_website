@@ -68,6 +68,21 @@
         .dark #theme-toggle .sun-icon, .dark #theme-toggle-mobile .sun-icon { display: none; }
         .dark #theme-toggle .moon-icon, .dark #theme-toggle-mobile .moon-icon { display: block; }
 
+        /* ── Mobile Menu Animation ── */
+        #mobile-menu {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        #mobile-menu.active {
+            max-height: 400px;
+            opacity: 1;
+            transform: translateY(0);
+            padding-bottom: 1.5rem;
+        }
+
         footer { background-color: var(--bg-card) !important; border-color: var(--border) !important; }
         .text-gray-400 { color: var(--text-muted) !important; }
         .text-gray-500 { color: var(--text-secondary) !important; }
@@ -181,11 +196,23 @@
                         <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
                     </svg>
                 </button>
-                <button class="text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button id="mobile-menu-toggle" class="text-gray-500 focus:outline-none" aria-label="Toggle menu">
+                    <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                     </svg>
+                    <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </button>
+            </div>
+        </div>
+        <!-- Mobile Menu Container -->
+        <div id="mobile-menu" class="md:hidden px-6">
+            <div class="flex flex-col space-y-4 pt-2 pb-4 border-t border-gray-100/50">
+                <a href="index.html#about" class="nav-link text-base font-medium py-1">About</a>
+                <a href="projects.html" class="nav-link text-base font-medium py-1">Projects</a>
+                <a href="blog.html" class="nav-link text-base font-medium py-1">Blog</a>
+                <a href="contact.html" class="nav-link text-base font-medium py-1">Contact</a>
             </div>
         </div>
     </nav>
@@ -243,6 +270,29 @@
         if (localStorage.getItem("theme") === "dark" ||
             (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
             document.documentElement.classList.add("dark");
+        }
+
+        // ── Mobile Menu Toggle ──
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconOpen = document.getElementById('menu-icon-open');
+        const menuIconClose = document.getElementById('menu-icon-close');
+
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', () => {
+                const isOpen = mobileMenu.classList.toggle('active');
+                menuIconOpen.classList.toggle('hidden', isOpen);
+                menuIconClose.classList.toggle('hidden', !isOpen);
+            });
+
+            // Close menu when clicking on a link
+            document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    menuIconOpen.classList.remove('hidden');
+                    menuIconClose.classList.add('hidden');
+                });
+            });
         }
 
         // ── Floating Particles ──
