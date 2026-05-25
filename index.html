@@ -193,6 +193,19 @@
         .dark .text-gray-400 { color: var(--text-muted) !important; }
         .dark .text-gray-500 { color: var(--text-secondary) !important; }
         .dark .text-gray-600 { color: var(--text-secondary) !important; }
+
+        /* ── Footer Link Hover Effect ── */
+        .footer-link {
+            color: var(--text-muted) !important;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        .footer-link:hover {
+            color: #3b82f6 !important;
+        }
+        .dark .footer-link:hover {
+            color: #60a5fa !important;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -453,10 +466,10 @@
                 &copy; 2026 Fred Fu. Built with Passion.
             </p>
             <div class="flex space-x-6">
-                <a href="https://github.com/Fuyh314" target="_blank" class="text-gray-400 hover:text-gray-600 transition-colors text-sm">GitHub</a>
-                <a href="https://x.com/Fredtelcom" target="_blank" class="text-gray-400 hover:text-gray-600 transition-colors text-sm">X</a>
-                <a href="https://space.bilibili.com/596361919" target="_blank" class="text-gray-400 hover:text-gray-600 transition-colors text-sm">Bilibili</a>
-                <span class="text-gray-400 text-sm">Email: fuyh07777777@163.com</span>
+                <a href="https://github.com/Fuyh314" target="_blank" class="footer-link text-sm">GitHub</a>
+                <a href="https://x.com/Fredtelcom" target="_blank" class="footer-link text-sm">X</a>
+                <a href="https://space.bilibili.com/596361919" target="_blank" class="footer-link text-sm">Bilibili</a>
+                <span class="footer-link text-sm" onclick="copyEmail(this)" title="点击复制邮箱">Email: fuyh07777777@163.com</span>
             </div>
         </div>
     </footer>
@@ -604,14 +617,19 @@
             mouse.y = -1000;
         });
 
-        // ── Copy Email ──
-        function copyEmail() {
-            const email = document.getElementById('email-text').textContent;
+        // ── Email Copy ──
+        function copyEmail(el) {
+            const email = el.textContent.trim().replace(/^Email:\s*/, '');
             navigator.clipboard.writeText(email).then(() => {
-                const btn = event.target.closest('button');
-                const original = btn.innerHTML;
-                btn.innerHTML = '<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
-                setTimeout(() => { btn.innerHTML = original; }, 2000);
+                const original = el.textContent;
+                el.textContent = '✓ 已复制！';
+                el.style.color = '#10b981';
+                setTimeout(() => {
+                    el.textContent = original;
+                    el.style.color = '';
+                }, 1500);
+            }).catch(() => {
+                alert('邮箱: ' + email);
             });
         }
     </script>
